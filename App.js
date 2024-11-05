@@ -11,6 +11,10 @@ export default function App() {
   const [importe, setImporte] = useState ('');
   const [personas, setPersonas] = useState ('');
   const [propina, setPropina] = useState ('');
+  const [iDePropina, setIPropina] = useState('');
+  const [pPPersona, setPPersona] = useState ('');
+  const [iTotal, setITotal] = useState ('');
+  const [iPPersona, setIPPersona] = useState ('');
 
   function importeTextInputHandler(enteredText){
     setImporte(enteredText);
@@ -20,6 +24,34 @@ export default function App() {
   }
   function propinaTextHandler(enteredText){
     setPropina(enteredText);
+  }
+
+  function onCalcularButtonTapped() {
+
+    const importeNum = parseFloat(importe);
+    const propinaNum = parseFloat(propina);
+    const personasNum = parseInt(personas);
+
+    const importePropina = importeNum * (propinaNum / 100);
+    const importeTotal = importeNum + importePropina;
+    const propinaPorPersona = importePropina / personasNum;
+    const importePorPersona = importeTotal / personasNum;
+
+    const formatoMoneda = new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    });
+
+    setITotal(formatoMoneda.format(importeTotal));
+    setIPropina(formatoMoneda.format(importePropina));
+    setPPersona(formatoMoneda.format(propinaPorPersona));
+    setIPPersona(formatoMoneda.format(importePorPersona));
+
+    // setIPropina(importePropina.toFixed(2));
+    // setITotal(importeTotal.toFixed(2));
+    // setPPersona(propinaPorPersona.toFixed(2));
+    // setIPPersona(importePorPersona.toFixed(2));
+
   }
 
   return (
@@ -74,18 +106,17 @@ export default function App() {
 
       {/* Sección de Comandos */}
       <View style={styles.commandContainer}>
-        <TextButton title="Calcular" />
+        <TextButton title="Calcular" onPress={onCalcularButtonTapped}/>
         <TextButton title="Limpiar" />
       </View>
 
       {/* Sección de Resultados */}
       <View style={styles.resultContainer}>
-        <Resultado descripcion='Importe de la Propina:' valor='$154.22'/>
-        <Resultado descripcion='Propina por Persona:' valor='$39.06'/>
-        <Resultado descripcion='Importe Total:' valor='$1,406.25'/>
-        <Resultado descripcion='Importe por Persona:' valor='$351.56'/>
+        <Resultado descripcion="Importe de la Propina:" valor={iDePropina} />
+        <Resultado descripcion="Propina por Persona:" valor={pPPersona} />
+        <Resultado descripcion="Importe Total:" valor={iTotal} />
+        <Resultado descripcion="Importe por Persona:" valor={iPPersona} />
       </View>
-
       <StatusBar style="auto" />
     </View>
   );
