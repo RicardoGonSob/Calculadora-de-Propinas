@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { Button, StyleSheet, Text, View, TextInput } from 'react-native';
 import { TextButton } from './components/TextButton';
 import {Stepper} from './components/Stepper'
-import { PresentpageButton } from './components/PresentpageButton';
+import   PercentageButton   from './components/PercentageButtonTapped';
 import { Resultado } from './components/Resultados';
 import { useState } from 'react';
 
@@ -54,6 +54,21 @@ export default function App() {
 
   }
 
+  function OnPercentageButtonTapped (percentage) {
+    setPropina(percentage)
+  }
+
+  function onTappedLimpiarButton(){
+    setImporte('');
+    setPersonas('1');
+    setPropina('0')
+
+    setIPropina('');
+    setPPersona('');
+    setITotal('');
+    setIPPersona('');
+  }
+
   return (
     <View style={styles.mainContainer}>
       {/* Contenedor principal del cuadro */}
@@ -78,15 +93,20 @@ export default function App() {
             placeholder="Ingrese el # de Personas" 
           />
           <View style={styles.personasButtons}>
-            <Stepper/>
+            <Stepper 
+            minValue='1'
+            maxValue='10'
+            increment='1'
+            value={personas}
+            onChange={(newValue) => setPersonas(newValue)}/>
           </View>
         </View>
         {/* Sección de Botones de Porcentaje de Propina */}
         <View style={styles.buttonContainer}>
-          <TextButton title='8%' style={styles.percentTipButton}/>
-          <TextButton title='10%' style={styles.percentTipButton}/>
-          <TextButton title='12.5%' style={styles.percentTipButton}/>
-          <TextButton title='15%' style={styles.percentTipButton}/>
+          <PercentageButton percentage='8' onPress={OnPercentageButtonTapped}/>
+          <PercentageButton percentage='10' onPress={OnPercentageButtonTapped}/>
+          <PercentageButton percentage='12.5' onPress={OnPercentageButtonTapped}/>
+          <PercentageButton percentage='15' onPress={OnPercentageButtonTapped}/>
         </View>
         {/* Sección de Ajuste de % Propina */}
         <View style={styles.inputContainer}>
@@ -96,10 +116,15 @@ export default function App() {
             onChangeText={propinaTextHandler}
             value={propina} 
             placeholder="Ingrese el % de Propina" 
-            keyboardType="numeric"
+            keyboardType="numeric-pad"
           />
           <View style={styles.personasButtons}>
-            <Stepper/>
+            <Stepper 
+            minValue='0'
+            maxValue='50'
+            increment='0.5'
+            value={propina}
+            onChange={(value) => setPropina(value)}/>
           </View>
         </View>
       </View>
@@ -107,7 +132,7 @@ export default function App() {
       {/* Sección de Comandos */}
       <View style={styles.commandContainer}>
         <TextButton title="Calcular" onPress={onCalcularButtonTapped}/>
-        <TextButton title="Limpiar" />
+        <TextButton title="Limpiar" onPress={onTappedLimpiarButton}/>
       </View>
 
       {/* Sección de Resultados */}
@@ -161,11 +186,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginVertical: 10,
-  },
-  percentTipButton: {
-    fontSize: 10,
-    minWidth: 50,
-    alignItems: 'center'
   },
   commandContainer: {
     flexDirection: 'row',
